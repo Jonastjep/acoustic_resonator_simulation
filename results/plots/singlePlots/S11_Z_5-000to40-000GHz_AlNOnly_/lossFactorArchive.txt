@@ -1,0 +1,2 @@
+[eta_mAlN, eta_mSapph, eta_mMo, eta_mAl, eta_kT, eta_eps]
+ 1e-05 4e-05 0.0001 0.0001 0 0
