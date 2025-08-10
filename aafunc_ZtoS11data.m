@@ -1,7 +1,8 @@
-function [S11, mag_dB, mag_lin, phase_rad, phase_deg] = aafunc_ZtoS11data(Z, unwrapped)
+function [S11, mag_dB, mag_lin, phase_rad, phase_deg] = aafunc_ZtoS11data(Z, unwrapped, Z0)
     arguments
         Z (1,:) double = [1i 1i 1i 1i 1i 1i 1i 1i 1i]
         unwrapped (1,1) double = 0;
+        Z0 (1,1) double = 50;  % Default characteristic impedance
     end  % default value
     
     S11 = (Z - 50)./(Z + 50);
