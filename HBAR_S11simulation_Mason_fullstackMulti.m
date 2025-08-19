@@ -9,10 +9,10 @@ unwrapped = 0;
 % in GHz
 fstart = 0;
 fend = 40; 
-nb_pts = 1000000;
+nb_pts = 5000000;
 
 %% Simulation Loss factors
-eta = [1e-1, 1e-4, 1e-2, 1e-2, 0, 0];
+eta = [1e-5, 1e-5, 1e-2, 1e-2, 0, 0];
 
 %% Material and HBAR parameter creation (all stored in one file)
 varFilename = 'allVariables_multiLossAlN';
@@ -20,6 +20,7 @@ varFilename = 'allVariables_multiLossAlN';
 %% Material and HBAR parameter creation (all stored in one file)
 file = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta,varFilename);
 load(file);
+delete(file);
 
 %% Transfer matrix impedance calculations
 % Front layer (Al electrode)

@@ -4,7 +4,7 @@ function varFilename = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta, va
         fstart (1,1) double = 0;
         fend   (1,1) double = 40;
         nb_pts (1,1) double = 1000000;
-        eta (1,:) double = [1e-1, 1e-4, 1e-4, 1e-4, 0, 0];
+        eta (1,:) double = [1e-4, 1e-4, 1e-4, 1e-4, 0, 0];
         varFilename {mustBeTextScalar} = 'allVariables';
     end  % default value
 
@@ -64,6 +64,7 @@ function varFilename = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta, va
     k_t_lossy = sqrt(k_t) .* (1-1i.*eta_kT);
     k_t2 = k_t_lossy.^2;
     phi = sqrt(vAlN.*C0.*ZAlN.*k_t2/dAlN);
+    h = e33AlN/eps_AlN;
     
     varFilename = [varFilename, '.mat'];
     save(varFilename)

@@ -2,14 +2,18 @@ clear
 
 %% Simulation range parameters
 % in GHz
-fstart = 0;
-fend = 40; 
+fstart = 0.5;
+fend = 15; 
+nb_pts = 500000;
 
-f = linspace(fstart*1e9, fend*1e9, 1000000); %linear frequency
-omega = 2*pi*f; %angular frequency
+%% Simulation Loss factors
+eta = [1e-6, 1e-4, 1e-4, 1e-4, 0, 0];
 
 %% Material and HBAR parameter creation (all stored in one file)
-materialConstants;
+varFilename = 'allVariables_multiLossAlN';
+file = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta,varFilename);
+load(file);
+delete(file);
 
 %% Transfer matrix impedance calculations
 % Front layer (Al electrode)
@@ -19,16 +23,18 @@ MFv_Al = pagemtimes(M_Al,Fv_Al);
 ZTop = MFv_Al(1,:)./MFv_Al(2,:);
 
 % Backing plate (Mo + Sapphire substrate)
+Fv_Sapph = [0;vSapph]; %we also define the F at the sapphire to be zero as it is in contact with air
 M_Sapph = aafunc_acousticTransferMatrix(ZSapph, gammaSapph);
 M_Mo = aafunc_acousticTransferMatrix(ZMo, gammaMo);
 M_Bulk = pagemtimes(M_Mo,M_Sapph);
+MFv_Bulk = pagemtimes(M_Bulk,Fv_Sapph);
+Z_Bulk = MFv_Bulk(1,:)./MFv_Bulk(2,:);
 
 % Piezo transfer matrix and full stack
 M_Piezo = aafunc_acousticTransferMatrixPiezo(omega, ZAlN, ZTop, gammaAlN, phi, C0);
 M_fullStack = pagemtimes(M_Piezo,M_Bulk);
 
 % Propagation of the initial force vector at the sapphire face (F = 0)
-Fv_Sapph = [0;vSapph]; %we also define the F at the sapphire to be zero as it is in contact with air
 VI = pagemtimes(M_fullStack,Fv_Sapph);
 
 % Calculation of impedance from resultant I-V vecor
@@ -52,4 +58,4 @@ xlabel('Frequency (GHz)');
 ylabel('|S_{11}| (dB)');
 title('S_{11} Magnitude');
 
-save('testFitting_Mason.mat','f','S11','mag_lin','mag_db','phase_deg','phase_rad')
+% save('testFitting_Mason.mat','f','S11','mag_lin','mag_db','phase_deg','phase_rad')

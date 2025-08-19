@@ -2,14 +2,20 @@ clear
 
 %% Simulation range parameters
 % in GHz
-fstart = 0;
+fstart = 0.1;
 fend = 40; 
+nb_pts = 100000;
 
-f = linspace(fstart*1e9, fend*1e9, 1000000); %linear frequency
-omega = 2*pi*f; %angular frequency
+%% Simulation Loss factors
+eta = [1e-4, 1e-4, 1e-4, 1e-4, 0, 0];
 
 %% Material and HBAR parameter creation (all stored in one file)
-materialConstants;
+varFilename = 'allVariables_multiLossAlN';
+
+%% Material and HBAR parameter creation (all stored in one file)
+file = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta,varFilename);
+load(file);
+delete(file);
 
 %% Transfer matrix impedance calculations
 % Backing plate (Sapphire substrate)
@@ -34,7 +40,7 @@ Z_in = VI(1,:)./VI(2,:);
 %% Plotting
 figure;
 hold on
-plot(f * 1e-9, mag_dB,'b');
+plot(f * 1e-9, mag_db,'b');
 xlabel('Frequency (GHz)');
 ylabel('|S_{11}| (dB)');
 title('S_{11} Magnitude');

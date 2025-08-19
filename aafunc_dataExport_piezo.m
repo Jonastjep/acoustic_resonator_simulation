@@ -1,9 +1,10 @@
-function [f, mag_db, phase_deg ,mag_db_z, phase_deg_z] = aafunc_dataExport_piezo(fstart,fend,nb_pts,eta)
+function [f, mag_db, phase_deg ,mag_db_z, phase_deg_z] = aafunc_dataExport_piezo(fstart,fend,nb_pts,eta,unwrapped)
     arguments
         fstart (1,1) double = 0;
         fend   (1,1) double = 40;
         nb_pts (1,1) double = 1000000;
         eta (1,:) double = [1e-1, 1e-4, 1e-4, 1e-4, 0, 0];
+        unwrapped (1,1) double = 0;
     end  % default value
 
     varFilename = 'allVariables_multiLossAlN';
@@ -11,6 +12,7 @@ function [f, mag_db, phase_deg ,mag_db_z, phase_deg_z] = aafunc_dataExport_piezo
     %% Material and HBAR parameter creation (all stored in one file)
     file = aafunc_materialVariablesExport(fstart,fend,nb_pts,eta,varFilename);
     load(file);
+    delete(file);
 
     %% Transfer matrix impedance calculations    
     % Piezo transfer matrix (Zb = 0, only air on top)
